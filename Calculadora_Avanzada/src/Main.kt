@@ -23,6 +23,8 @@ class Calculator {
             "exp" to 3
         )
 
+        val rightAssociative = setOf("^")
+
         for (token in tokens) {
             when {
                 token.isEmpty() -> continue
@@ -38,7 +40,8 @@ class Calculator {
                 }
                 token in precedence.keys -> {
                     while (operators.isNotEmpty() && operators.peek() != "(" &&
-                        precedence[operators.peek()]!! >= precedence[token]!!
+                        ((token !in rightAssociative && precedence[operators.peek()]!! >= precedence[token]!!) ||
+                                (token in rightAssociative && precedence[operators.peek()]!! > precedence[token]!!))
                     ) {
                         output.add(operators.pop())
                     }
